@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Release Win32
+        run: msbuild AsteriskPassword.vcxproj /m /p:Configuration=Release /p:Platform=Win32
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AsteriskPassword-Release-Win32
+          path: Release/AsteriskPassword.exe
+          if-no-files-found: error
